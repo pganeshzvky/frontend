@@ -10,6 +10,48 @@ import { AuthenticationActions } from '../actions/authentication';
 import { TransactionActions } from '../actions/transaction';
 import { UserActions } from '../actions/user';
 
+const fetchAll = function* (action) {
+  const authState = yield select(state => state.authentication.authState);
+  const response = yield call(Api.listBets);
+
+  if (response) {
+    const bets = response.data;
+
+    yield put(
+      BetActions.fetchAllSucceeded({
+        bets,
+      })
+    );
+  } else {
+    yield put(BetActions.fetchAllFailed());
+  }
+};
+
+const fetchAllSucceeded = function* (action) {
+  const bets = action.bets;
+  console.log('bets fetchAllSucceeded');
+};
+
+const fetchFilteredBets = function* ({ payload }) {
+  try {
+    // SM: perhaps better solution should be considered, instead of setting token in header for each request
+    // in the handler itself
+    const token = yield select(state => state.authentication.token);
+    Api.setToken(token);
+
+    const defaultParams = yield select(state => state.bet.defaultParams);
+
+    const newDefaultParams = { ...defaultParams, ...payload };
+
+    const { data } = yield call(() => Api.listBetsFiltered(newDefaultParams));
+
+    yield put(EventActions.setDefaultParamsValues(newDefaultParams));
+    yield put(EventActions.fetchFilteredBetsSuccess(data));
+  } catch (error) {
+    yield put(EventActions.fetchFilteredBetsFail());
+  }
+};
+
 const create = function* (action) {
   const eventId = action.eventId;
   const marketQuestion = action.marketQuestion;
@@ -199,4 +241,7 @@ export default {
   place,
   pullOut,
   fetchTradeHistory,
+  fetchAll,
+  fetchAllSucceeded,
+  fetchFilteredBets,
 };

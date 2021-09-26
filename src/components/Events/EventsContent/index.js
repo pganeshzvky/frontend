@@ -64,6 +64,12 @@ function EventsContent({ eventType, categories, setCategories }) {
     ['date'],
     ['desc']
   );
+  ////////////////
+  const bets = _.orderBy(
+    useSelector(state => state.bet.filteredBets),
+    ['date'],
+    ['desc']
+  );
 
   const mappedTags = id =>
     events.find(event => event._id === id)?.tags.map(tag => tag.name) || [];

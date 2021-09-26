@@ -19,7 +19,48 @@ export const BetTypes = {
   SET_SELL_OUTCOMES: 'Bet/SET_SELL_OUTCOMES',
   FETCH_TRADE_HISTORY: 'Bet/FETCH_TRADE_HISTORY',
   FETCH_TRADE_HISTORY_SUCCESS: 'Bet/FETCH_TRADE_HISTORY_SUCCESS',
+  FETCH_ALL: 'Bet/FETCH_ALL',
+  FETCH_ALL_SUCCEEDED: 'Bet/FETCH_ALL_SUCCEEDED',
+  FETCH_ALL_FAILED: 'Bet/FETCH_ALL_FAILED',
+  FETCH_FILTERED: 'Bet/FETCH_FILTERED',
+  FETCH_FILTERED_SUCCESS: 'Bet/FETCH_FILTERED_SUCCESS',
+  FETCH_FILTERED_FAIL: 'Bet/FETCH_FILTERED_FAIL',
+  SET_DEFAULT_PARAMS_VALUES: 'Bet/SET_DEFAULT_PARAMS_VALUES',
+  RESET_DEFAULT_PARAMS_VALUES: 'Bet/RESET_DEFAULT_PARAMS_VALUES',
 };
+
+const fetchAll = makeActionCreator(BetTypes.FETCH_ALL);
+
+const fetchAllSucceeded = makeActionCreator(BetTypes.FETCH_ALL_SUCCEEDED, {
+  events: null,
+});
+
+const fetchAllFailed = makeActionCreator(BetTypes.FETCH_ALL_FAILED);
+
+// Live events (filtered)
+const initiateFetchFilteredBets = (params = {}) => {
+  return {
+    type: BetTypes.FETCH_FILTERED,
+    payload: params,
+  };
+};
+const fetchFilteredBetsSuccess = payload => ({
+  type: BetTypes.FETCH_FILTERED_SUCCESS,
+  payload,
+});
+const fetchFilteredBetsFail = () => ({
+  type: BetTypes.FETCH_FILTERED_FAIL,
+});
+
+const setDefaultParamsValues = payload => ({
+  type: BetTypes.SET_DEFAULT_PARAMS_VALUES,
+  payload,
+});
+
+const resetDefaultParamsValues = payload => ({
+  type: BetTypes.RESET_DEFAULT_PARAMS_VALUES,
+  payload,
+});
 
 const create = makeActionCreator(BetTypes.CREATE, {
   eventId: null,
@@ -117,4 +158,12 @@ export const BetActions = {
   setSellOutcomes,
   fetchTradeHistory,
   fetchTradeHistorySuccess,
+  fetchAll,
+  fetchAllSucceeded,
+  fetchAllFailed,
+  initiateFetchFilteredBets,
+  fetchFilteredBetsSuccess,
+  fetchFilteredBetsFail,
+  setDefaultParamsValues,
+  resetDefaultParamsValues,
 };

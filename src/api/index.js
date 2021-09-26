@@ -136,6 +136,32 @@ const getLeaderboard = (skip, limit) => {
   });
 };
 
+const listBets = () => {
+  return Api.get(ApiUrls.API_BET_LIST).catch(error => {
+    console.log('[API Error] called: listBets', error);
+  });
+};
+
+const listBetsFiltered = ({
+  type,
+  category,
+  count,
+  page,
+  sortBy,
+  searchQuery,
+}) => {
+  return Api.get(
+    ApiUrls.API_BET_LIST_FILTERED.replace(':type', type)
+      .replace(':category', category)
+      .replace(':count', count)
+      .replace(':page', page)
+      .replace(':sortBy', sortBy)
+      .replace(':searchQuery', searchQuery)
+  ).catch(error => {
+    console.log('[API Error] called: listBetsFiltered', error);
+  });
+};
+
 const createBet = (
   eventId,
   marketQuestion,
@@ -378,6 +404,8 @@ export {
   getLeaderboard,
   listEvents,
   listEventsFiltered,
+  listBets,
+  listBetsFiltered,
   placeBet,
   pullOutBet,
   requestSms,

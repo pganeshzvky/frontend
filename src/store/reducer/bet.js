@@ -3,6 +3,8 @@ import update from 'immutability-helper';
 import { BetTypes } from '../actions/bet';
 
 const initialState = {
+  bets: [],
+  filteredBets: [],
   actionIsInProgress: false,
   outcomes: {},
   sellOutcomes: {},
@@ -11,6 +13,53 @@ const initialState = {
   tradeHistory: {
     trades: [],
   },
+  defaultParams: {
+    type: 'all',
+    category: 'all',
+    count: '30',
+    page: '1',
+    sortBy: 'name',
+    searchQuery: '',
+  },
+};
+
+const fetchAllSucceeded = (action, state) => {
+  return update(state, {
+    bets: {
+      $set: action.bets,
+    },
+  });
+};
+
+const setFilteredEvents = (state, { payload }) => {
+  return {
+    ...state,
+    filteredBets: payload,
+  };
+};
+
+const setDefaultParamsValues = (state, { payload }) => {
+  return {
+    ...state,
+    defaultParams: {
+      ...state.defaultParams,
+      ...payload,
+    },
+  };
+};
+
+const resetDefaultParamsValues = (state, { payload }) => {
+  return {
+    ...state,
+    defaultParams: {
+      type: 'all',
+      category: 'all',
+      count: '30',
+      page: '1',
+      sortBy: 'name',
+      searchQuery: '',
+    },
+  };
 };
 
 const setActionIsInProgress = (action, state) => {
@@ -71,6 +120,14 @@ const fetchTradeHistorySuccess = (action, state) => {
 export default function (state = initialState, action) {
   switch (action.type) {
     // @formatter:off
+    case BetTypes.FETCH_ALL_SUCCEEDED:
+      return fetchAllSucceeded(action, state);
+    case BetTypes.FETCH_FILTERED_SUCCESS:
+      return setFilteredEvents(state, action);
+    case BetTypes.SET_DEFAULT_PARAMS_VALUES:
+      return setDefaultParamsValues(state, action);
+    case BetTypes.RESET_DEFAULT_PARAMS_VALUES:
+      return resetDefaultParamsValues(state, action);
     case BetTypes.SET_OUTCOMES:
       return setOutcomes(action, state);
     case BetTypes.SET_SELL_OUTCOMES:
