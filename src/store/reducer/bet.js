@@ -18,7 +18,7 @@ const initialState = {
     category: 'all',
     count: '30',
     page: '1',
-    sortBy: 'name',
+    sortBy: 'marketQuestion',
     searchQuery: '',
   },
   betSortOptions: [
@@ -74,7 +74,7 @@ const resetDefaultParamsValues = (state, { payload }) => {
       category: 'all',
       count: '30',
       page: '1',
-      sortBy: 'name',
+      sortBy: 'marketQuestion',
       searchQuery: '',
     },
   };
