@@ -2,10 +2,21 @@ import { useCallback, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { EventActions } from '../../../../store/actions/event';
 
-export function useSortFilter() {
-  const [selectedSortItem, setSelectedSortItem] = useState('name');
+const defaultSort = {
+  'non-streamed': 'marketQuestion',
+  streamed: 'name',
+};
 
-  const sortOptions = useSelector(state => state.event.eventSortOptions);
+export function useSortFilter(eventType) {
+  const [selectedSortItem, setSelectedSortItem] = useState(
+    defaultSort[eventType]
+  );
+
+  const sortOptions = useSelector(state =>
+    eventType === 'non-streamed'
+      ? state.bet.betSortOptions
+      : state.event.eventSortOptions
+  );
 
   const handleSelectSortItem = item => {
     console.log('item :>> ', item);

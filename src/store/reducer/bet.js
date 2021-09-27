@@ -21,6 +21,24 @@ const initialState = {
     sortBy: 'name',
     searchQuery: '',
   },
+  betSortOptions: [
+    {
+      label: 'Alphabetically (A-Z)',
+      value: 'marketQuestion',
+    },
+    {
+      label: 'Alphabetically (Z-A)',
+      value: '-marketQuestion',
+    },
+    {
+      label: 'End date (newest first)',
+      value: 'date',
+    },
+    {
+      label: 'End date (oldest first)',
+      value: '-date',
+    },
+  ],
 };
 
 const fetchAllSucceeded = (action, state) => {

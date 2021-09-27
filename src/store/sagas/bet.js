@@ -29,7 +29,6 @@ const fetchAll = function* (action) {
 
 const fetchAllSucceeded = function* (action) {
   const bets = action.bets;
-  console.log('bets fetchAllSucceeded');
 };
 
 const fetchFilteredBets = function* ({ payload }) {
@@ -45,10 +44,10 @@ const fetchFilteredBets = function* ({ payload }) {
 
     const { data } = yield call(() => Api.listBetsFiltered(newDefaultParams));
 
-    yield put(EventActions.setDefaultParamsValues(newDefaultParams));
-    yield put(EventActions.fetchFilteredBetsSuccess(data));
+    yield put(BetActions.setDefaultParamsValues(newDefaultParams));
+    yield put(BetActions.fetchFilteredBetsSuccess(data));
   } catch (error) {
-    yield put(EventActions.fetchFilteredBetsFail());
+    yield put(BetActions.fetchFilteredBetsFail());
   }
 };
 

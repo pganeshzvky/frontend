@@ -28,16 +28,26 @@ function EventsContent({ eventType, categories, setCategories }) {
 
   const { location, category } = useRouteHandling(eventType);
 
-  const { fetchFilteredEvents, resetDefaultParamsValues } =
-    useMappedActions(eventType);
+  const {
+    fetchFilteredEvents,
+    resetDefaultParamsValues,
+    fetchFilteredBets,
+    resetDefaultParamsBetValues,
+  } = useMappedActions(eventType);
 
   const { handleSelectSortItem, selectedSortItem, sortOptions } =
-    useSortFilter();
+    useSortFilter(eventType);
 
   const handleSearchSubmit = val => {
-    fetchFilteredEvents({
-      searchQuery: searchInput,
-    });
+    if (eventType === 'non-streamed') {
+      fetchFilteredBets({
+        searchQuery: searchInput,
+      });
+    } else {
+      fetchFilteredEvents({
+        searchQuery: searchInput,
+      });
+    }
   };
 
   const handleSelectCategory = useCallback(
@@ -60,50 +70,42 @@ function EventsContent({ eventType, categories, setCategories }) {
   );
 
   const events = _.orderBy(
-    useSelector(state => state.event.filteredEvents),
-    ['date'],
-    ['desc']
+    useSelector(state => state.event.filteredEvents)
+    // ['date'],
+    // ['desc']
   );
-  ////////////////
+
   const bets = _.orderBy(
-    useSelector(state => state.bet.filteredBets),
-    ['date'],
-    ['desc']
+    useSelector(state => state.bet.filteredBets)
+    //   ['date'],
+    //   ['desc']
   );
 
   const mappedTags = id =>
     events.find(event => event._id === id)?.tags.map(tag => tag.name) || [];
 
-  //Improvement: API endpoints to list and filter bets?
-  const allEvents = useSelector(state => state.event.events);
-  const allBets = allEvents.reduce((acc, current) => {
-    const bets = current.bets.map(bet => ({
-      ...bet,
-      eventSlug: current.slug,
-      previewImageUrl: current.previewImageUrl,
-      tags: mappedTags(current._id),
-    }));
-    const concat = [...acc, ...bets];
-    return concat;
-  }, []);
-
-  const betIdsFromCurrentEvents = events.reduce((acc, current) => {
-    const concat = [...acc, ...current.bets];
-    return concat;
-  }, []);
-
-  const filteredBets = allBets.filter(bet => {
-    return betIdsFromCurrentEvents.includes(bet._id) && bet.published;
-  });
-
   useEffect(() => {
     handleSelectCategory(category);
 
-    fetchFilteredEvents({
-      category: category,
-      sortBy: selectedSortItem,
-    });
-  }, [category, selectedSortItem, fetchFilteredEvents, handleSelectCategory]);
+    if (eventType === 'non-streamed') {
+      fetchFilteredBets({
+        category: category,
+        sortBy: selectedSortItem,
+      });
+    } else {
+      fetchFilteredEvents({
+        category: category,
+        sortBy: selectedSortItem,
+      });
+    }
+  }, [
+    category,
+    selectedSortItem,
+    fetchFilteredEvents,
+    handleSelectCategory,
+    eventType,
+    fetchFilteredBets,
+  ]);
 
   useEffect(() => {
     getCoverStream().then(({ response }) => {
@@ -111,7 +113,11 @@ function EventsContent({ eventType, categories, setCategories }) {
       setCoverStream(responseCoverStream);
     });
     return () => {
-      resetDefaultParamsValues();
+      if (eventType === 'non-streamed') {
+        resetDefaultParamsBetValues();
+      } else {
+        resetDefaultParamsValues();
+      }
     };
   }, []);
 
@@ -198,10 +204,10 @@ function EventsContent({ eventType, categories, setCategories }) {
           ))}
 
         {eventType === 'non-streamed' &&
-          filteredBets.map(item => (
+          bets.map(item => (
             <Link
               to={{
-                pathname: `/trade/${item.eventSlug}/${item.slug}`,
+                pathname: `/trade/${item.event.slug}/${item.slug}`,
                 state: { fromLocation: location },
               }}
               key={item._id}
@@ -212,8 +218,8 @@ function EventsContent({ eventType, categories, setCategories }) {
                 organizer={''}
                 viewers={12345}
                 state={item.status}
-                tags={item.tags}
-                image={item.previewImageUrl}
+                tags={item.event.tags}
+                image={item.event.previewImageUrl}
                 eventEnd={item.endDate}
                 // streamUrl={item.streamUrl}
               />
