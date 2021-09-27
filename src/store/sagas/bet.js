@@ -234,6 +234,5 @@ export default {
   pullOut,
   fetchTradeHistory,
   fetchAll,
-  // fetchAllSucceeded,
   fetchFilteredBets,
 };
