@@ -11,7 +11,6 @@ import { TransactionActions } from '../actions/transaction';
 import { UserActions } from '../actions/user';
 
 const fetchAll = function* (action) {
-  const authState = yield select(state => state.authentication.authState);
   const response = yield call(Api.listBets);
 
   if (response) {
@@ -27,14 +26,8 @@ const fetchAll = function* (action) {
   }
 };
 
-const fetchAllSucceeded = function* (action) {
-  const bets = action.bets;
-};
-
 const fetchFilteredBets = function* ({ payload }) {
   try {
-    // SM: perhaps better solution should be considered, instead of setting token in header for each request
-    // in the handler itself
     const token = yield select(state => state.authentication.token);
     Api.setToken(token);
 
@@ -241,6 +234,6 @@ export default {
   pullOut,
   fetchTradeHistory,
   fetchAll,
-  fetchAllSucceeded,
+  // fetchAllSucceeded,
   fetchFilteredBets,
 };

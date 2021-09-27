@@ -32,22 +32,23 @@ export const BetTypes = {
 const fetchAll = makeActionCreator(BetTypes.FETCH_ALL);
 
 const fetchAllSucceeded = makeActionCreator(BetTypes.FETCH_ALL_SUCCEEDED, {
-  events: null,
+  bets: null,
 });
 
 const fetchAllFailed = makeActionCreator(BetTypes.FETCH_ALL_FAILED);
 
-// Live events (filtered)
 const initiateFetchFilteredBets = (params = {}) => {
   return {
     type: BetTypes.FETCH_FILTERED,
     payload: params,
   };
 };
+
 const fetchFilteredBetsSuccess = payload => ({
   type: BetTypes.FETCH_FILTERED_SUCCESS,
   payload,
 });
+
 const fetchFilteredBetsFail = () => ({
   type: BetTypes.FETCH_FILTERED_FAIL,
 });

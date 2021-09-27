@@ -97,7 +97,6 @@ const root = function* () {
     takeEvery([EventTypes.FETCH_HOME_EVENTS], EventSagas.fetchHomeEvents),
     takeLatest([BetTypes.PLACE], BetSagas.place),
     takeLatest([BetTypes.FETCH_ALL], BetSagas.fetchAll),
-    takeLatest([BetTypes.FETCH_ALL_SUCCEEDED], BetSagas.fetchAllSucceeded),
     takeLatest([BetTypes.FETCH_FILTERED], BetSagas.fetchFilteredBets),
     takeLatest([BetTypes.CREATE], BetSagas.create),
     takeEvery([BetTypes.FETCH_OUTCOMES], BetSagas.fetchOutcomes),

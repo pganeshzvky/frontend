@@ -1,6 +1,5 @@
-import { useCallback, useState } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
-import { EventActions } from '../../../../store/actions/event';
+import { useState } from 'react';
+import { useSelector } from 'react-redux';
 
 const defaultSort = {
   'non-streamed': 'marketQuestion',
