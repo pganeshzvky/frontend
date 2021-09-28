@@ -1,4 +1,4 @@
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import * as Api from 'api/crash-game';
 import { useDispatch, useSelector } from 'react-redux';
 import Grid from '@material-ui/core/Grid';
@@ -26,7 +26,7 @@ const RosiGame = () => {
   const { lastCrashes, inGameBets, cashedOut } = useRosiData();
   const isSmallDevice = useMediaQuery('(max-width:768px)');
   const isMiddleOrLargeDevice = useMediaQuery('(min-width:769px)');
-
+  const [timerValue, setTimerValue] = useState();
   useEffect(() => {
     Api.getCurrentGameInfo()
       .then(response => {
@@ -54,12 +54,15 @@ const RosiGame = () => {
           <Grid container spacing={1}>
             <Grid item xs={12} md={9}>
               <LastCrashes lastCrashes={lastCrashes} />
-              <GameAnimation inGameBets={inGameBets} />
+              <GameAnimation
+                inGameBets={inGameBets}
+                onTimerUpdate={setTimerValue}
+              />
             </Grid>
             {isMiddleOrLargeDevice && (
               <>
                 <Grid item xs={12} md={3}>
-                  <PlaceBet />
+                  <PlaceBet timerValue={timerValue} />
                 </Grid>
                 <Grid item xs={12} md={4}>
                   <div className={styles.chatWrapper}>

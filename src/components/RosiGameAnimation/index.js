@@ -26,7 +26,7 @@ const PreparingRound = ({ secondsUntilNextGame }) => (
   </div>
 );
 
-const RosiGameAnimation = () => {
+const RosiGameAnimation = ({ onTimerUpdate }) => {
   const canvasRef = useRef(null);
   const lastCrashValue = useSelector(selectLastCrash);
   const gameStarted = useSelector(selectHasStarted);
@@ -109,7 +109,7 @@ const RosiGameAnimation = () => {
         className={cn(styles.timer, { [styles.flashAnimation]: !gameStarted })}
       >
         {gameStarted ? (
-          <Timer pause={!gameStarted} startTimeMs={timerStartTime} />
+          <Timer pause={!gameStarted} startTimeMs={timerStartTime} onUpdate={onTimerUpdate} />
         ) : (
           <span>{lastCrashValue.toFixed(2)}</span>
         )}

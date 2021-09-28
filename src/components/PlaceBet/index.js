@@ -23,7 +23,7 @@ import {
 import ReactCanvasConfetti from 'react-canvas-confetti';
 import { playWinSound } from '../../helper/Audio';
 
-const PlaceBet = () => {
+const PlaceBet = ({ timerValue }) => {
   const dispatch = useDispatch();
   const user = useSelector(selectUser);
   const userBalance = parseInt(user?.balance || 0, 10);
@@ -92,7 +92,7 @@ const PlaceBet = () => {
 
   const cashOut = () => {
     dispatch(RosiGameActions.cashOut());
-    Api.cashOut()
+    Api.cashOut(timerValue)
       .then(response => {
         setAnimate(true);
         AlertActions.showSuccess(JSON.stringify(response));
