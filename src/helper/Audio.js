@@ -1,3 +1,5 @@
+import { isMobile } from './Mobile';
+
 export function playWinSound(volumeLevel) {
   try {
     const el = document.getElementById('audio-win');
@@ -35,15 +37,35 @@ export function playFailSound(volumeLevel = 0.5) {
 }
 
 export function playFlyingSound(volumeLevel = 0.5, seek = 0) {
+  if (isMobile()) {
+    return playFlyingSoundMobile(seek);
+  }
   try {
     const el = document.getElementById('audio-flying');
     if (el.play) {
       el.volume = volumeLevel;
       el.play();
       if (seek > 1) {
-        console.log(seek.toFixed());
         el.currentTime = seek.toFixed(0);
       }
+    }
+  } catch (e) {
+    console.error(e);
+  }
+}
+
+export function playFlyingSoundMobile(seek) {
+  try {
+    const el = document.getElementById('audio-flying');
+    if (el.canplay) {
+      el.play();
+      if (seek > 1) {
+        el.currentTime = seek.toFixed(0);
+      }
+    } else {
+      el.addEventListener('canplay', () => {
+        el.play();
+      });
     }
   } catch (e) {
     console.error(e);
