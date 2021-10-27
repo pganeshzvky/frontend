@@ -18,6 +18,7 @@ const initialState = {
   animationIndex: 0,
   musicIndex: 0,
   bgIndex: 0,
+  timeOffset: 0,
 };
 
 const initializeState = (action, state) => {
@@ -45,7 +46,7 @@ const initializeState = (action, state) => {
   const userBet = currentBets.find(b => {
     return b.userId === userId;
   });
-
+  const offset = Date.now() - (action.payload?.ts || Date.now());
   return {
     ...state,
     hasStarted,
@@ -62,19 +63,24 @@ const initializeState = (action, state) => {
     placedBetInQueue: !!upcomingBets.find(b => b?.userId === userId),
     isCashedOut: !!cashedOutBets.find(b => b?.userId === userId),
     volumeLevel: parseInt(volumeLevel),
+    timeOffset: offset > 10000 ? offset : 0,
   };
 };
 
 const setHasStarted = (action, state) => {
+  const offset = Date.now() - (action.payload?.ts || Date.now());
   return {
     ...state,
     hasStarted: true,
-    timeStarted: action.payload.timeStarted,
+    timeStarted: new Date(
+      new Date(action.payload.timeStarted).getTime() + offset
+    ).toISOString(),
     placedBetInQueue: false,
     betQueue: [],
     animationIndex: action.payload.animationIndex,
     musicIndex: action.payload.musicIndex,
     bgIndex: action.payload.bgIndex,
+    timeOffset: offset,
   };
 };
 
@@ -93,10 +99,13 @@ const setUserBet = (action, state) => {
 };
 
 const addLastCrash = (action, state) => {
+  const offset = Date.now() - (action.payload?.ts || Date.now());
   return {
     ...state,
     hasStarted: false,
-    nextGameAt: action.payload.nextGameAt,
+    nextGameAt: new Date(
+      new Date(action.payload.nextGameAt).getTime() + offset
+    ).toISOString(),
     userBet: state.betQueue.find(bet => {
       if (!action.payload.userId) {
         return bet.userId === 'Guest';
@@ -105,6 +114,7 @@ const addLastCrash = (action, state) => {
     }),
     lastCrashes: [action.payload.crashFactor, ...state.lastCrashes],
     isCashedOut: false,
+    timeOffset: offset,
   };
 };
 
